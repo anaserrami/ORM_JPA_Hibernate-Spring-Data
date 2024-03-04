@@ -52,7 +52,8 @@ public class HospitalApplication {
 			rendezVous.setStatus(StatusRDV.PENDING);
 			rendezVous.setMedecin(medecin);
 			rendezVous.setPatient(patient);
-			rendezVousRepository.save(rendezVous);
+			RendezVous saveRDV = rendezVousRepository.save(rendezVous);
+			System.out.println(saveRDV.getId());
 
 			RendezVous rendezVous1 = rendezVousRepository.findById(1L).orElse(null);
 			Consultation consultation = new Consultation();
