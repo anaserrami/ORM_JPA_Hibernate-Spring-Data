@@ -1,29 +1,21 @@
 package ma.enset.hospital.service;
 
 import jakarta.transaction.Transactional;
-import ma.enset.hospital.entities.Consultation;
-import ma.enset.hospital.entities.Medecin;
-import ma.enset.hospital.entities.Patient;
-import ma.enset.hospital.entities.RendezVous;
-import ma.enset.hospital.repositories.ConsultationRepository;
-import ma.enset.hospital.repositories.MedecinRepository;
-import ma.enset.hospital.repositories.PatientRepository;
-import ma.enset.hospital.repositories.RendezVousRepository;
+import lombok.AllArgsConstructor;
+import ma.enset.hospital.entities.*;
+import ma.enset.hospital.repositories.*;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class IHospitalServiceImpl implements IHospitalService{
     private PatientRepository patientRepository;
     private MedecinRepository medecinRepository;
     private RendezVousRepository rendezVousRepository;
     private ConsultationRepository consultationRepository;
-    public IHospitalServiceImpl(PatientRepository patientRepository, MedecinRepository medecinRepository, RendezVousRepository rendezVousRepository, ConsultationRepository consultationRepository) {
-        this.patientRepository = patientRepository;
-        this.medecinRepository = medecinRepository;
-        this.rendezVousRepository = rendezVousRepository;
-        this.consultationRepository = consultationRepository;
-    }
+    private UserRepository userRepository;
+    private RoleRepository roleRepository;
 
     @Override
     public Patient savePatient(Patient patient) {
@@ -41,7 +33,41 @@ public class IHospitalServiceImpl implements IHospitalService{
     }
 
     @Override
-    public Consultation saveConsultation(Consultation consultation) {
-        return consultationRepository.save(consultation);
+    public Consultation saveConsultation(Consultation consultation) { return consultationRepository.save(consultation);}
+
+    @Override
+    public User saveUser(User user) {return userRepository.save(user);}
+
+    @Override
+    public Role saveRole(Role role) {return roleRepository.save(role);}
+
+    @Override
+    public User findUserByUserName(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public Role findRoleByRoleName(String roleName) {
+        return roleRepository.findByRoleName(roleName);
+    }
+
+    @Override
+    public void addRoleToUser(String username, String roleName) {
+        User user = userRepository.findByUsername(username);
+        Role role = roleRepository.findByRoleName(roleName);
+        if (user.getRoles() != null) {
+            user.getRoles().add(role);
+            role.getUsers().add(user);
+        }
+    }
+
+    @Override
+    public User authenticate(String username, String password) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) throw new RuntimeException("Invalid user or password");
+        if (user.getPassword().equals(password)) {
+            return user;
+        }
+        throw new RuntimeException("Invalid user or password");
     }
 }

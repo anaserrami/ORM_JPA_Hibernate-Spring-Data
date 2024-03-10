@@ -12,7 +12,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -109,7 +108,6 @@ public class HospitalApplication {
 				System.out.println("\nPatient num " + idToRemove + " est deja supprimer!");
 			}
 
-
 			Stream.of("Khalid", "Fatima", "Hanan", "Ahmed").forEach(name -> {
 				Medecin medecin = new Medecin();
 				medecin.setNom(name);
@@ -137,6 +135,46 @@ public class HospitalApplication {
 			consultation.setRapport("Rapport de la premier consultation");
 			hospitalService.saveConsultation(consultation);
 			System.out.println("\nConsultation num : " + consultation.getId());
+
+
+			// Users and Roles
+			User user1 = new User();
+			user1.setUsername("user1");
+			user1.setPassword("123456");
+			hospitalService.saveUser(user1);
+
+			User user2 = new User();
+			user2.setUsername("user2");
+			user2.setPassword("12345");
+			hospitalService.saveUser(user2);
+
+			User admin = new User();
+			admin.setUsername("admin");
+			admin.setPassword("1234");
+			hospitalService.saveUser(admin);
+
+			Stream.of("USER", "ADMIN").forEach(roleName -> {
+				Role role = new Role();
+				role.setDescription("Description " + roleName);
+				role.setRoleName(roleName);
+				hospitalService.saveRole(role);
+			});
+
+			hospitalService.addRoleToUser("user1", "USER");
+			hospitalService.addRoleToUser("admin", "USER");
+			hospitalService.addRoleToUser("admin", "ADMIN");
+
+			try {
+				User user = hospitalService.authenticate("admin", "1234");
+				System.out.println("\n\nId : " + user.getId());
+				System.out.println("Username : " + user.getUsername());
+				System.out.println("Roles => ");
+				user.getRoles().forEach(role -> {
+					System.out.println(role.toString());
+				});
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 		};
 	}
