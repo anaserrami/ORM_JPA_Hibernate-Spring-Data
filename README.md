@@ -12,6 +12,7 @@ Pour le cas des patients :
 * **HospitalApplication** est la classe principale qui lance l'application et initialise des données de test pour simuler son fonctionnement.
 
 ![img.png](captures/img.png)
+![img8.png](captures/img8.png)
 
 ## Fonctionnalités
 
