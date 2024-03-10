@@ -11,9 +11,6 @@ import ma.enset.hospital.repositories.PatientRepository;
 import ma.enset.hospital.repositories.RendezVousRepository;
 import org.springframework.stereotype.Service;
 
-import java.io.PrintWriter;
-import java.security.PrivateKey;
-
 @Service
 @Transactional
 public class IHospitalServiceImpl implements IHospitalService{
